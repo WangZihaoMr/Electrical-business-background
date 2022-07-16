@@ -41,6 +41,7 @@
                 <el-form-item prop="password">
                   <el-input
                     v-model.trim="loginForm.password"
+                    type="password"
                     show-password
                     size="small"
                     placeholder="请输入密码"
@@ -100,7 +101,6 @@
 
 <script>
 import 'element-ui/lib/theme-chalk/display.css'
-import LoginApi from '../../api/login'
 
 export default {
   name: 'LoginView',
@@ -119,18 +119,14 @@ export default {
       }
     }
   },
-  created() {},
   methods: {
-    async loadLogin() {
-      const token = await LoginApi.login(this.loginForm)
-      console.log(token)
-    },
     handleLoginSubmit(loginFormRef) {
-      this.$refs[loginFormRef].validate((valid) => {
+      this.$refs[loginFormRef].validate(async (valid) => {
         if (valid) {
-          alert('submit!')
+          const res = await this.$store.dispatch('user/login', this.loginForm)
+          if (res) this.$router.push('/')
         } else {
-          console.log('error submit!!')
+          console.log('登录失败!!!')
           return false
         }
       })
