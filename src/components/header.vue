@@ -18,7 +18,7 @@
       </li>
     </ul>
     <!-- 头部右侧 -->
-    <div class="userAvatar">
+    <div class="userAvatar" @click="toggleScreen">
       <span class="screenIcon">
         <el-tooltip
           class="item"
@@ -26,7 +26,9 @@
           content="全屏"
           placement="bottom"
         >
-          <el-icon class="el-icon-full-screen"></el-icon>
+          <el-icon
+            :class="isFullscreen ? 'el-icon-aim' : 'el-icon-full-screen'"
+          ></el-icon>
         </el-tooltip>
       </span>
       <el-avatar :size="25" src=""></el-avatar>
@@ -44,16 +46,50 @@
 </template>
 
 <script>
+import screenfull from 'screenfull'
+
 export default {
   name: 'headerView',
   components: {},
   data() {
-    return {}
+    return {
+      isFullscreen: false
+    }
   },
-  created() {},
+  mounted() {
+    const that = this
+    window.addEventListener('keydown', this.KeyDown, true)
+    window.onresize = () => {
+      // 调用判断全屏的方法，用来监听
+      that.checkFull()
+    }
+  },
   methods: {
     handleSelectOptions(command) {
       console.log(command)
+    },
+    // 全屏功能
+    toggleScreen() {
+      screenfull.toggle()
+      this.isFullscreen = !this.isFullscreen
+    },
+    checkFull() {
+      const fullscreen = window.fullScreen || document.webkitIsFullScreen
+      this.fullscreen = fullscreen
+      return fullscreen
+    },
+    // F11按键
+    KeyDown(event) {
+      let count = 0
+      count++
+      if (event.keyCode === 122) {
+        if (count === 1) {
+          console.log('keycode', event.returnValue)
+          event.returnValue = false
+          this.toggleScreen() // 触发全屏的按钮
+          count = 0
+        }
+      }
     }
   }
 }
