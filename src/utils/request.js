@@ -17,8 +17,11 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   function (response) {
+    if (response.data.msg === 'ok') {
+      return response.data.data
+    }
     console.log(response)
-    return response
+    // return response
   },
   function (error) {
     return Promise.reject(error)
@@ -27,11 +30,9 @@ instance.interceptors.response.use(
 
 // 统一发送请求参数
 function request(options) {
-  console.log(options)
   options.method = options.method || 'GET'
   options.params =
     options.method.toLocaleUpperCase() === 'GET' ? options.data : {}
-
   return instance(options)
 }
 

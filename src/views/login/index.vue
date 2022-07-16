@@ -4,7 +4,6 @@
 
 <script>
 import LoginApi from '../../api/login'
-console.log(LoginApi)
 
 export default {
   name: 'LoginView',
