@@ -124,7 +124,7 @@ export default {
       this.$refs[loginFormRef].validate(async (valid) => {
         if (valid) {
           const res = await this.$store.dispatch('user/login', this.loginForm)
-          if (res) this.$router.push('/')
+          if (res) this.$router.push('/layout')
         } else {
           console.log('登录失败!!!')
           return false
