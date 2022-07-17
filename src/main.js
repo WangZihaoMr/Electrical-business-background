@@ -16,6 +16,9 @@ Vue.config.productionTip = false
 // 注册elemnt-ui
 Vue.use(ElementUI)
 
+// 引入页面鉴权       // 清除token后，页面鉴权报错
+// import './permission'
+
 new Vue({
   router,
   store,

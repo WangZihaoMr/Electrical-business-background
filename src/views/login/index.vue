@@ -108,8 +108,8 @@ export default {
   data() {
     return {
       loginForm: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: 'admin'
       },
       loginFormRules: {
         username: [
@@ -125,6 +125,11 @@ export default {
         if (valid) {
           const res = await this.$store.dispatch('user/login', this.loginForm)
           if (res) this.$router.push('/layout')
+          this.$notify({
+            title: '',
+            message: '登录成功',
+            type: 'success'
+          })
         } else {
           console.log('登录失败!!!')
           return false

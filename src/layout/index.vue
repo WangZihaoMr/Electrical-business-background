@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import AppHeader from '../components/header'
+import AppHeader from './Header/header'
 export default {
   name: 'layoutView',
   components: { AppHeader },

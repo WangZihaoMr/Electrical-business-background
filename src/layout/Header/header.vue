@@ -18,12 +18,12 @@
       </li>
     </ul>
     <!-- 头部右侧 -->
-    <div class="userAvatar" @click="toggleScreen">
-      <span class="screenIcon">
+    <div class="userAvatar">
+      <span class="screenIcon" @click="toggleScreen">
         <el-tooltip
           class="item"
           effect="dark"
-          content="全屏"
+          :content="isFullscreen ? '取消全屏' : '全屏'"
           placement="bottom"
         >
           <el-icon
@@ -31,10 +31,11 @@
           ></el-icon>
         </el-tooltip>
       </span>
-      <el-avatar :size="25" src=""></el-avatar>
+      <el-avatar :size="25" :src="$store.getters.userInfo.avatar"></el-avatar>
       <el-dropdown @command="handleSelectOptions">
         <span class="el-dropdown-link">
-          admin<i class="el-icon-arrow-down el-icon--right"></i>
+          {{ $store.getters.userInfo.username
+          }}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="fixPwd">修改密码</el-dropdown-item>
@@ -42,6 +43,10 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <!-- 修改密码 -->
+    <el-drawer title="修改密码" :visible.sync="drawer">
+      <span>我来啦!</span>
+    </el-drawer>
   </div>
 </template>
 
@@ -53,7 +58,8 @@ export default {
   components: {},
   data() {
     return {
-      isFullscreen: false
+      isFullscreen: false,
+      drawer: false
     }
   },
   mounted() {
@@ -66,7 +72,35 @@ export default {
   },
   methods: {
     handleSelectOptions(command) {
+      if (command === 'fixPwd') {
+        this.handleFixPassword()
+      } else {
+        this.handleLoginOut()
+      }
       console.log(command)
+    },
+    // 修改密码
+    handleFixPassword() {
+      this.drawer = !this.drawer
+    },
+    // 退出登录
+    async handleLoginOut() {
+      this.$confirm('是否要退出登录？', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          const res = this.$store.dispatch('user/loginOut')
+          console.log(res)
+          this.$router.push('/login')
+          this.$notify({
+            title: '',
+            message: '退出登录成功',
+            type: 'success'
+          })
+        })
+        .catch(() => {})
     },
     // 全屏功能
     toggleScreen() {
@@ -141,5 +175,8 @@ export default {
       margin: 0 30px 0 10px;
     }
   }
+}
+::v-deep(.el-drawer) {
+  width: 45% !important;
 }
 </style>
