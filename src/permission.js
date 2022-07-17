@@ -14,10 +14,12 @@ router.beforeEach(async (to, from, next) => {
         const userInfo = await store.dispatch('user/getUserInfo')
         console.log(userInfo)
         if (userInfo) {
-          return next(to.path)
+          console.log(userInfo)
+          next()
+        } else {
+          next('/login')
         }
       }
-      next()
     }
   } else {
     if (whiteList.includes(to.path)) {

@@ -137,19 +137,19 @@ export default {
       }
       console.log(command)
     },
-    // 修改密码
+    // 修改密码抽屉组件的打开与关闭
     handleFixPassword() {
       this.drawer = !this.drawer
     },
     // 退出登录
-    async handleLoginOut() {
+    handleLoginOut() {
       this.$confirm('是否要退出登录？', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
-        .then(() => {
-          const res = this.$store.dispatch('user/loginOut')
+        .then(async () => {
+          const res = await this.$store.dispatch('user/loginOut')
           console.log(res)
           this.$router.push('/login')
           this.$notify({

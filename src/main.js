@@ -10,14 +10,14 @@ import './stylesheet/reset.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
+// 引入页面鉴权       // 清除token后，页面鉴权报错
+import './permission'
+
 // 关闭vue提示
 Vue.config.productionTip = false
 
 // 注册elemnt-ui
 Vue.use(ElementUI)
-
-// 引入页面鉴权       // 清除token后，页面鉴权报错
-// import './permission'
 
 new Vue({
   router,
