@@ -2,8 +2,10 @@
   <div class="header-container">
     <!-- 头部左侧 -->
     <ul class="scaling">
-      <li>
-        <el-icon class="el-icon-s-fold"></el-icon>
+      <li @click="handleExtends">
+        <el-icon
+          :class="isIconStatus ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
+        ></el-icon>
         <!-- <el-icon class="el-icon-s-unfold"></el-icon> -->
       </li>
       <li>
@@ -116,7 +118,8 @@ export default {
         surePassword: [
           { required: true, message: '确认密码不能为空', trigger: 'blur' }
         ]
-      }
+      },
+      isIconStatus: false
     }
   },
   mounted() {
@@ -190,6 +193,11 @@ export default {
           console.log('修改密码成功')
         }
       })
+    },
+    // 左侧菜单切换
+    handleExtends() {
+      this.isIconStatus = !this.isIconStatus
+      this.$store.commit('user/setIcon', this.isIconStatus)
     }
   }
 }

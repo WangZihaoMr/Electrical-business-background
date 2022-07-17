@@ -7,7 +7,8 @@ export default {
   namespaced: true,
   state: {
     token: getItem(TOKEN_KEY) || '',
-    userInfo: ''
+    userInfo: '',
+    isIconStatus: false
   },
   mutations: {
     // 存储token
@@ -18,6 +19,10 @@ export default {
     // 存储用户信息
     set_userInfo(state, userInfo) {
       state.userInfo = userInfo
+    },
+    // 左侧菜单的状态
+    setIcon(state, status) {
+      state.isIconStatus = status
     }
   },
   actions: {
