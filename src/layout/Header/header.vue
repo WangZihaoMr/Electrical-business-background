@@ -45,7 +45,48 @@
     </div>
     <!-- 修改密码 -->
     <el-drawer title="修改密码" :visible.sync="drawer">
-      <span>我来啦!</span>
+      <el-form
+        ref="fixPasswordFormRef"
+        :model="fixPasswordForm"
+        :rules="fixPasswordFormRules"
+        label-width="120px"
+        class="demo-ruleForm"
+      >
+        <el-form-item prop="oldPassword" label="旧密码">
+          <el-input
+            v-model.trim="fixPasswordForm.oldPassword"
+            size="mini"
+            placeholder="请输入旧密码"
+          ></el-input>
+        </el-form-item>
+        <el-form-item prop="newPassword" label="新密码">
+          <el-input
+            v-model.trim="fixPasswordForm.newPassword"
+            type="password"
+            show-password
+            size="small"
+            placeholder="请输入新密码"
+          ></el-input>
+        </el-form-item>
+        <el-form-item prop="surePassword" label="确认密码">
+          <el-input
+            v-model.trim="fixPasswordForm.surePassword"
+            type="password"
+            show-password
+            size="mini"
+            placeholder="请输入确认密码"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            class="login-btn"
+            type="primary"
+            @click="handleFixPasswordSubmit('fixPasswordFormRef')"
+            >提交</el-button
+          >
+          <el-button>取消</el-button>
+        </el-form-item>
+      </el-form>
     </el-drawer>
   </div>
 </template>
@@ -59,7 +100,23 @@ export default {
   data() {
     return {
       isFullscreen: false,
-      drawer: false
+      drawer: false,
+      fixPasswordForm: {
+        oldPassword: '',
+        newPassword: '',
+        surePassword: ''
+      },
+      fixPasswordFormRules: {
+        oldPassword: [
+          { required: true, message: '旧密码不能为空', trigger: 'blur' }
+        ],
+        newPassword: [
+          { required: true, message: '新密码不能为空', trigger: 'blur' }
+        ],
+        surePassword: [
+          { required: true, message: '确认密码不能为空', trigger: 'blur' }
+        ]
+      }
     }
   },
   mounted() {
@@ -71,6 +128,7 @@ export default {
     }
   },
   methods: {
+    // 下拉菜单
     handleSelectOptions(command) {
       if (command === 'fixPwd') {
         this.handleFixPassword()
@@ -124,6 +182,14 @@ export default {
           count = 0
         }
       }
+    },
+    // 提交密码
+    handleFixPasswordSubmit(fixPasswordFormRef) {
+      this.$refs.fixPasswordFormRef.validate(async (valid) => {
+        if (valid) {
+          console.log('修改密码成功')
+        }
+      })
     }
   }
 }
