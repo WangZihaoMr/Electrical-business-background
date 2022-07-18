@@ -27,7 +27,8 @@ const routes = [
   {
     path: '/',
     name: 'layout',
-    component: Layout
+    component: Layout,
+    children: []
   },
   {
     path: '/login',
@@ -166,20 +167,21 @@ const asyncRoutes = [
     }
   }
 ]
-// console.log(asyncRoutes)
+
 const router = new VueRouter({
   routes
 })
 
 // 动态添加路由的方法
 export function addRoutes(menus) {
+  console.log('111', menus)
   // 是否有新的路由
   let hasNewRoutes = false
   const findAndAddRoutesByMenus = (arr) => {
     arr.forEach((e) => {
       const item = asyncRoutes.find((o) => o.path === e.frontpath)
       if (item) {
-        router.addRoute('admin', item)
+        router.addRoute('layout', item)
         hasNewRoutes = true
       }
       if (e.child && e.child.length > 0) {

@@ -8,16 +8,20 @@ router.beforeEach(async (to, from, next) => {
   console.log(token)
   if (token) {
     if (to.path === '/login') {
+      console.log('1')
       next(from.path)
     } else {
       let hasNewRoutes = false
-      if (!store.getters.userInfo) {
+      if (!store.getters.userInfo.menus) {
+        console.log('2')
         const { menus } = await store.dispatch('user/getUserInfo')
         console.log('菜单数据===>', menus)
-        // 动态添加路由
-        hasNewRoutes = addRoutes(menus)
+        if (menus && menus.length > 0) {
+          // 动态添加路由
+          hasNewRoutes = addRoutes(menus)
+        }
         console.log('路由表数据===>', router.getRoutes())
-        next(to.path)
+        return next(to.path)
       } else {
         hasNewRoutes ? next(to.fullPath) : next()
       }
@@ -26,6 +30,7 @@ router.beforeEach(async (to, from, next) => {
     if (whiteList.includes(to.path)) {
       next()
     } else {
+      console.log('4')
       next('/login')
     }
   }

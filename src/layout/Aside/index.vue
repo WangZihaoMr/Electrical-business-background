@@ -22,6 +22,7 @@
                 :key="ele.frontpath"
                 :index="ele.frontpath"
               >
+                {{ ele.frontpath }}
                 <i :class="'el-icon-' + ele.icon"></i>
                 <span slot="title">{{ ele.name }}</span>
               </el-menu-item>
