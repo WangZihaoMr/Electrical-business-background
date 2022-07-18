@@ -21,19 +21,13 @@ export const filterMenus = (menus) => {
       children: []
     })
   })
-  console.log('处理字段后的一级路由===>', twoMenus)
+  console.log('处理字段后的一级路由twoMenus===>', twoMenus)
 
   // 将所有的二级菜单数据放进一级路由里面
-  let temp = []
-  menus.forEach((item) => {
-    temp = item.child
+  twoMenus.forEach((item, index) => {
+    item.children.push(...menus[index].child)
   })
-
   // 将对应的二级路由存放到一级路由
-  twoMenus.forEach((item) => {
-    item.children.push(...temp)
-  })
-  console.log('twoMenus===>', twoMenus)
 
   return twoMenus
   // console.log(router.getRoutes())
