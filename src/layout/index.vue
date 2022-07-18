@@ -2,7 +2,13 @@
   <el-container>
     <el-header>
       <div class="logo">
-        <span><el-icon class="el-icon-eleme"></el-icon>积云编程</span>
+        <span
+          ><el-icon
+            class="el-icon-platform-eleme"
+            style="padding-right: 5px"
+          ></el-icon
+          >积云编程</span
+        >
       </div>
       <app-header></app-header>
     </el-header>

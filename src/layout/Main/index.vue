@@ -1,6 +1,8 @@
 <template>
   <div class="main-container">
-    <el-main>Main</el-main>
+    <el-main>
+      <router-view></router-view>
+    </el-main>
   </div>
 </template>
 

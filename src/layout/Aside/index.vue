@@ -8,30 +8,24 @@
         :unique-opened="true"
         :collapse="isIconStatus"
         :collapse-transition="true"
+        router
       >
-        <template v-for="item in menusList">
-          <template v-if="item.children && item.children.length >= 0">
-            <el-submenu :index="item.path" :key="item.title">
+        <template v-for="(item, index) in menusList">
+          <template v-if="item.child && item.child.length > 0">
+            <el-submenu :index="index.toString()" :key="item.title">
               <template slot="title">
                 <i :class="'el-icon-' + item.icon"></i>
-                <span>{{ item.title }}</span>
+                <span>{{ item.name }}</span>
               </template>
               <el-menu-item
-                v-for="(ele, i) in item.children"
-                :key="i"
-                :index="ele.path"
+                v-for="ele in item.child"
+                :key="ele.frontpath"
+                :index="ele.frontpath"
               >
-                <i :class="'el-icon-' + item.icon"></i>
+                <i :class="'el-icon-' + ele.icon"></i>
                 <span slot="title">{{ ele.name }}</span>
               </el-menu-item>
             </el-submenu>
-          </template>
-
-          <template v-if="!item.children">
-            <el-menu-item :index="item.path" :key="item.title">
-              <i :class="'el-icon-' + item.icon"></i>
-              <span slot="title">{{ item.title }}</span>
-            </el-menu-item>
           </template>
         </template>
       </el-menu>
@@ -41,7 +35,7 @@
 </template>
 
 <script>
-import { filterMenus } from '../../utils/menu'
+// import { filterMenus } from '../../utils/menu'
 export default {
   name: 'asideView',
   components: {},
@@ -54,7 +48,7 @@ export default {
   methods: {},
   computed: {
     menusList() {
-      return filterMenus(this.$store.getters.userInfo.menus)
+      return this.$store.getters.userInfo.menus
     },
     isIconStatus() {
       return this.$store.getters.isIconStatus
