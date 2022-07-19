@@ -2,12 +2,16 @@
   <div class="tags-contianer">
     <ul class="tags">
       <li
+        :class="{ active: item.path === $route.path }"
         v-for="(item, index) in tags"
         :key="index"
         @click="handleTopath(index, item.path)"
       >
         {{ item.title
-        }}<span v-if="index !== 0" class="close" @click="handleDelTag(index)"
+        }}<span
+          v-if="index !== 0"
+          class="close"
+          @click="handleDelTag(index, item.path)"
           ><i class="el-icon-close"></i
         ></span>
       </li>
@@ -34,21 +38,21 @@ export default {
   created() {},
   methods: {
     // 删除单个tag
-    handleDelTag(i) {
+    handleDelTag(i, path) {
+      console.log(path)
+      if (this.tags.length === 1) {
+        this.$router.push(this.tags[0].path)
+      } else {
+        this.$router.push(this.tags[i - 1].path)
+      }
       this.$store.dispatch('tagsview/delTag', i)
     },
     // 跳转tag
     handleTopath(i, path) {
-      // 如果点击第一个则终止跳转
-      if (i + 1 === this.tags.length) {
-        return
+      if (this.$route.path !== path) {
+        this.$router.push(path)
       }
-      console.log('哈哈哈===>', this.tags[i].path)
-      // 判断跳转的路径是否与当前路径一致
-      // if (path === this.tags[i].path) {
-      //   return
-      // }
-      this.$router.push(path)
+      console.log('1===>', this.tags[i].path)
     },
     // 关闭选项功能
     handleCloseTagOptions(command) {
@@ -64,7 +68,9 @@ export default {
       this.$store.dispatch('tagsview/closeOtherTag', i)
     },
     // 关闭所有功能
-    handleCloseAllTag() {}
+    handleCloseAllTag() {
+      this.$store.dispatch('tagsview/closeAllTag')
+    }
   },
   // 监听路由，添加tag标签
   watch: {
@@ -135,6 +141,9 @@ export default {
           background-color: #a8abb2;
         }
       }
+    }
+    .active {
+      color: #409eff;
     }
   }
 }
