@@ -1,5 +1,6 @@
 <template>
   <div class="main-container">
+    <tags-view></tags-view>
     <el-main>
       <router-view></router-view>
     </el-main>
@@ -7,9 +8,10 @@
 </template>
 
 <script>
+import TagsView from '../../components/tagsview'
 export default {
   name: 'mainView',
-  components: {},
+  components: { TagsView },
   data() {
     return {}
   },
@@ -20,5 +22,6 @@ export default {
 <style scoped lang="scss">
 .main-container {
   width: calc(100vw - 250px);
+  background-color: #f2f3f5;
 }
 </style>
