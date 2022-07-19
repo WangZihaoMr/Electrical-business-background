@@ -8,12 +8,12 @@ router.beforeEach(async (to, from, next) => {
   console.log(token)
   if (token) {
     if (to.path === '/login') {
-      console.log('1')
+      // console.log('1')
       next(from.path)
     } else {
       let hasNewRoutes = false
       if (!store.getters.userInfo.menus) {
-        console.log('2')
+        // console.log('2')
         const { menus } = await store.dispatch('user/getUserInfo')
         console.log('菜单数据===>', menus)
         if (menus && menus.length > 0) {

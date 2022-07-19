@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 import Layout from '../layout'
 import Index from '../views/index'
 import Login from '../views/login'
-import NotFound from '../views/404/list'
+// import NotFound from '../views/404/list'
 import GoodList from '../views/goods/list'
 import CategoryList from '../views/category/list'
 import UserList from '../views/user/list'
@@ -13,6 +13,8 @@ import CommentList from '../views/comment/list'
 import ImageList from '../views/image/list'
 import NoticeList from '../views/notice/list'
 import SettingBase from '../views/setting/list'
+import SettingBuy from '../views/setting/buy'
+import SettingShip from '../views/setting/ship'
 import CouponList from '../views/coupon/list'
 import ManagerList from '../views/manager/list'
 import AccessList from '../views/access/list'
@@ -36,12 +38,12 @@ const routes = [
     meta: {
       title: '登录页'
     }
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: NotFound
   }
+  // {
+  //   path: '/:pathMatch(.*)*',
+  //   name: 'NotFound',
+  //   component: NotFound
+  // }
 ]
 
 // 动态路由，用于匹配菜单动态添加路由
@@ -114,6 +116,22 @@ const asyncRoutes = [
     path: '/setting/base',
     name: '/setting/base',
     component: SettingBase,
+    meta: {
+      title: '配置'
+    }
+  },
+  {
+    path: '/setting/buy',
+    name: '/setting/buy',
+    component: SettingBuy,
+    meta: {
+      title: '配置'
+    }
+  },
+  {
+    path: '/setting/ship',
+    name: '/setting/ship',
+    component: SettingShip,
     meta: {
       title: '配置'
     }

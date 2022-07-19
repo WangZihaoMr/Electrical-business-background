@@ -1,5 +1,5 @@
 <template>
-  <div class="">设置列表</div>
+  <div class="settings-container">setting</div>
 </template>
 
 <script>
