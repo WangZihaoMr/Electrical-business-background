@@ -22,6 +22,5 @@ export default {
 <style scoped lang="scss">
 .main-container {
   width: calc(100vw - 250px);
-  background-color: #f2f3f5;
 }
 </style>

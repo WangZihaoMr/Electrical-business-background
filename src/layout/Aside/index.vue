@@ -65,6 +65,7 @@ export default {
   transition: all 0.2s;
   height: calc(100vh - 64px);
   overflow-y: auto;
+  background-color: #ffffff;
 }
 // 去除页面滚动条的样式
 ::-webkit-scrollbar {

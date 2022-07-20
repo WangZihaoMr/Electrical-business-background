@@ -36,7 +36,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .el-container {
-  height: 100%;
+  background-color: #f2f3f5;
 }
 .el-header {
   padding: 0;
@@ -52,6 +52,7 @@ export default {
   width: 250px !important;
   background-color: #d3dce6;
   color: #333;
+  height: 100%;
 }
 
 .el-main {
