@@ -18,6 +18,11 @@ const getGoodsList = () => {
   })
 }
 
+// 商品选择接口
+const getGoodsSelectionList = () => {
+  return request({ url: '/admin/goods/1?tab=all', method: 'GET' })
+}
+
 // 删除接口
 // const delCate = () => {
 //   return request({ url: '', method: '' })
@@ -39,5 +44,6 @@ export default {
   getCatagoryList,
   updateCateList,
   addCatagoryList,
-  getGoodsList
+  getGoodsList,
+  getGoodsSelectionList
 }

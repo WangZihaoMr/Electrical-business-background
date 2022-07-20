@@ -9,7 +9,7 @@
       <ul class="cate-wrapper">
         <li class="li-small" v-for="(item, index) in cateData" :key="index">
           <div class="cate-name">{{ item.name }}</div>
-          <div>
+          <div class="cate-right">
             <el-button type="text" @click="handleOpenDrawer('goods')"
               >推荐商品</el-button
             >
@@ -21,11 +21,13 @@
               @change="updateSwitchCate(item.id, item.status)"
             >
             </el-switch>
-            <el-button type="text" @click="handleOpenDrawer('edit')"
+            <el-button type="text" @click="handleOpenDrawer('edit', item.name)"
               >修改</el-button
             >
             <el-popconfirm title="您确定删除吗？">
-              <el-button type="text" slot="reference">删除</el-button>
+              <el-button class="del-button" type="text" slot="reference"
+                >删除</el-button
+              >
             </el-popconfirm>
           </div>
         </li>
@@ -38,10 +40,10 @@
       :visible.sync="drawer"
       :before-close="handleClose"
     >
-      <div v-if="drawerTitle === '新增'">
+      <div v-if="drawerTitle === '新增' || drawerTitle === '修改'">
         <el-form ref="cateFormRef" :model="cateForm" label-width="80px">
           <el-form-item label="分类名称">
-            <el-input v-model="cateForm.name"></el-input>
+            <el-input v-model="cateForm.name" placeholder="分类名称"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -51,7 +53,7 @@
           <el-table-column prop="cover" label="商品封面" width="200">
             <template v-slot="scope">
               <el-image
-                style="width: 100px; height: 100px"
+                style="width: 64px; height: 64px"
                 :src="scope.row.cover"
                 fit
               ></el-image>
@@ -69,7 +71,10 @@
       </div>
 
       <div class="footer">
-        <el-button v-if="drawerTitle === '推荐商品'" type="primary"
+        <el-button
+          v-if="drawerTitle === '推荐商品'"
+          type="primary"
+          @click="handleOpenGoodsSelection"
           >关联</el-button
         >
         <el-button v-else type="primary" @click="handleSubmitCateForm"
@@ -78,6 +83,57 @@
         <el-button @click="handleClose">取消</el-button>
       </div>
     </el-drawer>
+
+    <!-- 对话框 -->
+    <el-dialog
+      title="商品选择"
+      :visible.sync="goodsDialogVisible"
+      width="80%"
+      :before-close="handleCloseGoodsSections"
+    >
+      <el-table
+        ref="multipleTable"
+        :data="goodsSelectionList"
+        tooltip-effect="dark"
+        style="width: 100%"
+      >
+        <!-- @selection-change="handleSelectionChange" -->
+        <el-table-column type="selection" width="55"> </el-table-column>
+        <el-table-column label="商品" width="300">
+          <template slot-scope="scope">
+            <div class="goods-box">
+              <el-image
+                style="width: 50px; height: 50px"
+                :src="scope.row.cover"
+                fit
+              ></el-image>
+              <div class="desc">
+                <p class="desc-title">{{ scope.row.desc }}</p>
+                <p>分类：{{ scope.row.category.name }}</p>
+                <p>创建时间：{{ scope.row.create_time }}</p>
+              </div>
+            </div></template
+          >
+        </el-table-column>
+        <el-table-column prop="stock" label="总库存" width="120">
+          <template v-slot="scope"> {{ scope.row.stock }} </template>
+        </el-table-column>
+        <el-table-column label="价格" show-overflow-tooltip width="200">
+          <template v-slot="scope">
+            <div class="goods-price">
+              <span>{{ scope.row.min_price }}</span>
+              <i></i>
+              <span>{{ scope.row.min_oprice }}</span>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="60"
+      ></el-pagination>
+    </el-dialog>
   </div>
 </template>
 
@@ -95,7 +151,9 @@ export default {
       cateForm: {
         name: ''
       },
-      goodsList: []
+      goodsList: [],
+      goodsDialogVisible: false,
+      goodsSelectionList: []
     }
   },
   created() {
@@ -118,14 +176,14 @@ export default {
     async updateSwitchCate(id, status) {
       const data = {
         id,
-        status
+        status: status === 1
       }
-      const res = await CategoryApi.updateCateList(data)
-      console.log(res)
+      await CategoryApi.updateCateList(data)
       // this.getCateList()
     },
     // 打开抽屉
-    handleOpenDrawer(action) {
+    handleOpenDrawer(action, nameEdit) {
+      // console.log('1', nameEdit)
       this.drawer = !this.drawer
       console.log(action)
       switch (action) {
@@ -138,10 +196,12 @@ export default {
           break
         case 'edit':
           this.drawerTitle = '修改'
+          this.cateForm.name = nameEdit
           break
         default:
           break
       }
+      // console.log('2', this.cateForm.name)
     },
     // 关闭抽屉
     handleClose() {
@@ -161,7 +221,7 @@ export default {
     // 编辑
     handleEditCate() {},
     // 推荐商品
-    async handleGoods() {},
+    handleGoods() {},
     // 提交
     handleSubmitCateForm() {
       if (this.drawerTitle === '新增') {
@@ -171,6 +231,17 @@ export default {
       } else if (this.drawerTitle === '修改') {
         this.handleEditCate()
       }
+    },
+    // 商品选择对话框的打开
+    async handleOpenGoodsSelection() {
+      this.goodsDialogVisible = true
+      const res = await CategoryApi.getGoodsSelectionList()
+      this.goodsSelectionList = res.list
+      console.log(this.goodsSelectionList)
+    },
+    // 商品选择对话框叉号关闭
+    handleCloseGoodsSections() {
+      this.goodsDialogVisible = false
     }
   }
 }
@@ -195,7 +266,7 @@ export default {
       color: #606266;
     }
     .swicth {
-      margin: 0 6px;
+      margin: 0 10px;
     }
   }
 }
@@ -207,5 +278,41 @@ export default {
 }
 .footer {
   padding: 20px;
+}
+.cate-right {
+  ::v-deep(.el-button) {
+    font-size: 12px !important;
+  }
+}
+.del-button {
+  margin-left: 20px;
+}
+.goods-box {
+  display: flex;
+  .desc {
+    color: #9ca3af;
+    .desc-title {
+      color: #606233;
+    }
+  }
+  .goods-price {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 0 15px;
+    i {
+      display: inline-block;
+      width: 1px;
+      height: 10px;
+      background-color: #dcdfe6;
+    }
+  }
+}
+::v-deep(.el-image) {
+  margin-right: 8px;
+}
+::v-deep(.el-pagination) {
+  display: inline-block;
+  margin: auto;
 }
 </style>
