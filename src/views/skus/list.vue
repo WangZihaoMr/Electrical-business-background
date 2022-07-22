@@ -73,13 +73,44 @@
             </template>
           </el-form-item>
           <el-form-item label="状态">
+            <!-- :value="skuForm.status === 1 ? true : false" -->
             <el-switch
               class="swicth"
-              :value="skuForm.status === 1 ? true : false"
+              active-value="0"
+              inactive-value="1"
               active-color="#409eff"
               inactive-color="#d9dce3"
+              @change="handleChangeSwitch(skuForm.status)"
             >
             </el-switch>
+          </el-form-item>
+          <el-form-item label="规格值">
+            <el-tag
+              :key="tag"
+              v-for="tag in tags"
+              closable
+              :disable-transitions="false"
+              @close="handleClose(tag)"
+            >
+              {{ tag }}
+            </el-tag>
+            <el-input
+              class="input-new-tag"
+              v-if="countStatus"
+              v-model="skusSum"
+              ref="saveTagInput"
+              size="small"
+              @keyup.enter.native="handleInputConfirm"
+              @blur="handleInputConfirm"
+            >
+            </el-input>
+            <el-button
+              v-else
+              class="button-new-tag"
+              size="small"
+              @click="handleShowIpt"
+              >+ 添加值</el-button
+            >
           </el-form-item>
           <el-form-item>
             <el-button type="primary">提交</el-button>
@@ -113,8 +144,14 @@ export default {
         name: [
           { required: true, message: '规格名称不能为空', trigger: 'blur' }
         ],
-        规格值: [{ required: true, message: '规格值不能为空', trigger: 'blur' }]
-      }
+        skusSum: [
+          { required: true, message: '规格值不能为空', trigger: 'blur' },
+          { min: 1, message: '请添加规格值', trigger: 'blur' }
+        ]
+      },
+      skusSum: '',
+      countStatus: false,
+      tags: []
     }
   },
   created() {
@@ -134,6 +171,30 @@ export default {
     // 抽屉的关闭
     handleCloseDrawer() {
       this.drawer = false
+    },
+    // 显示/隐藏    规格添加值
+    handleShowIpt() {
+      this.countStatus = true
+      this.$nextTick((_) => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+    // 删除tag标签
+    handleClose(tag) {
+      this.tags.splice(this.tags.indexOf(tag), 1)
+    },
+    // 回车添加值
+    handleInputConfirm() {
+      const skusSum = this.skusSum
+      if (skusSum) {
+        this.tags.push(skusSum)
+      }
+      this.countStatus = false
+      this.skusSum = ''
+    },
+    // switch
+    handleChangeSwitch(status) {
+      console.log(status)
     }
   }
 }
@@ -148,5 +209,33 @@ header {
 }
 ::v-deep(.el-drawer) {
   width: 45% !important;
+}
+.addSkusBtn {
+  width: 80px;
+  height: 30px;
+  font-size: 12px;
+  color: #616367;
+  border: 1px solid #dcdfe6;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+.skusIpt {
+  width: 100px;
+  height: 30px;
+}
+.el-tag + .el-tag {
+  margin-left: 10px;
+}
+.button-new-tag {
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.input-new-tag {
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
 }
 </style>
