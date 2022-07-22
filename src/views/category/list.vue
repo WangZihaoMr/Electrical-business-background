@@ -4,7 +4,15 @@
       <div class="header">
         <el-button size="mini" type="primary" @click="handleOpenDrawer('add')"
           >新增</el-button
-        ><i class="el-icon-refresh"></i>
+        >
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="刷新数据"
+          placement="top"
+        >
+          <div class="refresh"><i class="el-icon-refresh"></i></div>
+        </el-tooltip>
       </div>
       <ul class="cate-wrapper">
         <li class="li-small" v-for="(item, index) in cateData" :key="index">
@@ -13,7 +21,6 @@
             <el-button type="text" @click="handleOpenDrawer('goods')"
               >推荐商品</el-button
             >
-
             <el-switch
               class="swicth"
               v-model="item.status"
@@ -24,11 +31,17 @@
               @change="updateSwitchCate(item.id, item.status)"
             >
             </el-switch>
-            <el-button type="text" @click="handleOpenDrawer('edit', item.name)"
+            <el-button
+              type="text"
+              @click="handleOpenDrawer('edit', item.name, item.id)"
               >修改</el-button
             >
             <el-popconfirm title="您确定删除吗？">
-              <el-button class="del-button" type="text" slot="reference"
+              <el-button
+                class="del-button"
+                type="text"
+                slot="reference"
+                @click="handleDelCate(item.name, item.id)"
                 >删除</el-button
               >
             </el-popconfirm>
@@ -167,13 +180,13 @@ export default {
       const res = await CategoryApi.getCatagoryList(this.cateForm)
       this.cateData = res
       this.cateDataList = JSON.parse(JSON.stringify(this.cateData))
-      console.log('cateDataList', this.cateDataList)
+      // console.log('cateDataList', this.cateDataList)
     },
     // 商品列表数据
     async loadGoods() {
       const res = await CategoryApi.getGoodsList()
       this.goodsList = res
-      console.log('商品', res)
+      // console.log('商品', res)
     },
     // 编辑状态
     async updateSwitchCate(id, status) {
@@ -181,11 +194,18 @@ export default {
         id,
         status: status === 1
       }
-      await CategoryApi.updateCateList(data)
-      // this.getCateList()
+      try {
+        await CategoryApi.updateCateList(data)
+        this.$notify({
+          message: '编辑成功',
+          type: 'success'
+        })
+      } catch (error) {
+        console.log(error)
+      }
     },
     // 打开抽屉
-    handleOpenDrawer(action, nameEdit) {
+    handleOpenDrawer(action, nameEdit, id) {
       // console.log('1', nameEdit)
       this.drawer = !this.drawer
       console.log(action)
@@ -200,6 +220,7 @@ export default {
         case 'edit':
           this.drawerTitle = '修改'
           this.cateForm.name = nameEdit
+          this.getEditId = id
           break
         default:
           break
@@ -213,16 +234,44 @@ export default {
     },
     // 新增
     async handleAddCate() {
-      await CategoryApi.addCatagoryList(this.cateForm)
+      try {
+        await CategoryApi.addCatagoryList(this.cateForm)
+        this.getCateList()
+        this.handleClose()
+        this.$notify({
+          message: '新增成功',
+          type: 'success'
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    // 编辑
+    async handleEditCate() {
+      await CategoryApi.updateCategory({
+        name: this.cateForm.name,
+        id: this.getEditId
+      })
       this.getCateList()
       this.handleClose()
       this.$notify({
-        message: '新增成功',
+        message: '编辑成功',
         type: 'success'
       })
     },
-    // 编辑
-    handleEditCate() {},
+    // 删除
+    async handleDelCate(name, id) {
+      await CategoryApi.delCate({
+        name,
+        id
+      })
+      this.getCateList()
+      this.handleClose()
+      this.$notify({
+        message: '删除成功',
+        type: 'success'
+      })
+    },
     // 推荐商品
     handleGoods() {},
     // 提交
@@ -240,7 +289,7 @@ export default {
       this.goodsDialogVisible = true
       const res = await CategoryApi.getGoodsSelectionList()
       this.goodsSelectionList = res.list
-      console.log(this.goodsSelectionList)
+      // console.log(this.goodsSelectionList)
     },
     // 商品选择对话框叉号关闭
     handleCloseGoodsSections() {
@@ -317,5 +366,16 @@ export default {
 ::v-deep(.el-pagination) {
   display: inline-block;
   margin: auto;
+}
+.refresh {
+  width: 60px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f5f7fa;
+  }
 }
 </style>

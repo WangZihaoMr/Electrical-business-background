@@ -4,7 +4,15 @@
       <header>
         <el-button size="mini" type="primary" @click="handleOpenDrawer('add')"
           >新增</el-button
-        ><i class="el-icon-refresh"></i>
+        >
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="刷新数据"
+          placement="top"
+        >
+          <div class="refresh"><i class="el-icon-refresh"></i></div>
+        </el-tooltip>
       </header>
       <el-table :data="couponList" style="width: 100%">
         <el-table-column prop="scope" label="优惠券名称" width="400">
@@ -87,6 +95,17 @@ header {
   small {
     font-size: 12px;
     color: #9ca3af;
+  }
+}
+.refresh {
+  width: 60px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f5f7fa;
   }
 }
 </style>

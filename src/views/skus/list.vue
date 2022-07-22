@@ -12,7 +12,14 @@
             新增 </el-button
           ><el-button type="danger" size="mini">批量删除</el-button>
         </div>
-        <i class="el-icon-refresh"></i>
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="刷新数据"
+          placement="top"
+        >
+          <div class="refresh"><i class="el-icon-refresh"></i></div>
+        </el-tooltip>
       </header>
       <el-table :data="skusList" stripe sortable style="width: 100%">
         <el-table-column type="selection" width="60"></el-table-column>
@@ -250,5 +257,16 @@ header {
   width: 90px;
   margin-left: 10px;
   vertical-align: bottom;
+}
+.refresh {
+  width: 60px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f5f7fa;
+  }
 }
 </style>

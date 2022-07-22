@@ -24,9 +24,9 @@ const getGoodsSelectionList = () => {
 }
 
 // 删除接口
-// const delCate = () => {
-//   return request({ url: '', method: '' })
-// }
+const delCate = (data) => {
+  return request({ url: `/admin/category/${data.id}`, method: 'POST', data })
+}
 
 // 更新分类列表状态接口
 const updateCateList = (data = {}) => {
@@ -39,11 +39,18 @@ const updateCateList = (data = {}) => {
   })
 }
 
+// 更新分类编辑接口
+const updateCategory = (data = {}) => {
+  return request({ url: `/admin/category/${data.id}`, method: 'POST', data })
+}
+
 // 导出方法
 export default {
   getCatagoryList,
   updateCateList,
   addCatagoryList,
   getGoodsList,
-  getGoodsSelectionList
+  getGoodsSelectionList,
+  updateCategory,
+  delCate
 }
