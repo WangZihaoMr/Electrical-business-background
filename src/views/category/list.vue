@@ -13,9 +13,12 @@
             <el-button type="text" @click="handleOpenDrawer('goods')"
               >推荐商品</el-button
             >
+
             <el-switch
               class="swicth"
-              :value="item.status === 1 ? true : false"
+              v-model="item.status"
+              :active-value="0"
+              :inactive-value="1"
               active-color="#409eff"
               inactive-color="#d9dce3"
               @change="updateSwitchCate(item.id, item.status)"
@@ -33,7 +36,6 @@
         </li>
       </ul>
     </el-card>
-
     <!-- 抽屉 -->
     <el-drawer
       :title="drawerTitle"
@@ -112,8 +114,8 @@
                 <p>分类：{{ scope.row.category.name }}</p>
                 <p>创建时间：{{ scope.row.create_time }}</p>
               </div>
-            </div></template
-          >
+            </div>
+          </template>
         </el-table-column>
         <el-table-column prop="stock" label="总库存" width="120">
           <template v-slot="scope"> {{ scope.row.stock }} </template>
@@ -139,7 +141,6 @@
 
 <script>
 import CategoryApi from '../../api/category'
-
 export default {
   name: '',
   components: {},
@@ -153,7 +154,8 @@ export default {
       },
       goodsList: [],
       goodsDialogVisible: false,
-      goodsSelectionList: []
+      goodsSelectionList: [],
+      cateDataList: []
     }
   },
   created() {
@@ -163,8 +165,9 @@ export default {
     // 获取分类接口
     async getCateList() {
       const res = await CategoryApi.getCatagoryList(this.cateForm)
-      // console.log(res)
       this.cateData = res
+      this.cateDataList = JSON.parse(JSON.stringify(this.cateData))
+      console.log('cateDataList', this.cateDataList)
     },
     // 商品列表数据
     async loadGoods() {

@@ -33,6 +33,7 @@
               :value="scope.row.status === 1 ? true : false"
               active-color="#409eff"
               inactive-color="#dcdfe6"
+              @change="handleChangeTableSwitch(scope.row.status)"
             >
             </el-switch>
           </template>
@@ -60,7 +61,7 @@
         <el-form
           :model="skuForm"
           :rules="skuFormRules"
-          ref="skuFormR"
+          ref="skuFormRef"
           label-width="100px"
           class="demo-ruleForm"
         >
@@ -73,11 +74,9 @@
             </template>
           </el-form-item>
           <el-form-item label="状态">
-            <!-- :value="skuForm.status === 1 ? true : false" -->
             <el-switch
               class="swicth"
-              active-value="0"
-              inactive-value="1"
+              :value="skuForm.status === 1"
               active-color="#409eff"
               inactive-color="#d9dce3"
               @change="handleChangeSwitch(skuForm.status)"
@@ -113,8 +112,10 @@
             >
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">提交</el-button>
-            <el-button>取消</el-button>
+            <el-button type="primary" @click="handleSkusFormSubmit"
+              >提交</el-button
+            >
+            <el-button @click="handleColseForm">取消</el-button>
           </el-form-item>
         </el-form>
       </el-drawer>
@@ -195,6 +196,18 @@ export default {
     // switch
     handleChangeSwitch(status) {
       console.log(status)
+    },
+    // 表格switch
+    handleChangeTableSwitch(status) {
+      this.status = !this.status
+    },
+    // 表单取消
+    handleColseForm() {
+      this.drawer = false
+    },
+    // 表单提交验证
+    handleSkusFormSubmit() {
+      // this.$refs.skuFormRef.validate(valid)
     }
   }
 }
