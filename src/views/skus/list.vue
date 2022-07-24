@@ -5,12 +5,22 @@
       <header>
         <div>
           <el-button
+            class="addbtn"
             type="primary"
             size="mini"
             @click="handleOpenDrawer('add')"
           >
-            新增 </el-button
-          ><el-button type="danger" size="mini">批量删除</el-button>
+            新增
+          </el-button>
+          <el-popconfirm title="您确定删除吗？" @confirm="handleDelAllSkus">
+            <el-button
+              class="del-button"
+              slot="reference"
+              type="danger"
+              size="mini"
+              >批量删除</el-button
+            >
+          </el-popconfirm>
         </div>
         <el-tooltip
           class="item"
@@ -26,9 +36,11 @@
       <el-table
         v-loading="loadingStatus"
         :data="skusList"
-        stripe
-        sortable
+        ref="multipleTable"
+        tooltip-effect="dark"
         style="width: 100%"
+        stripe
+        @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="60"></el-table-column>
         <el-table-column
@@ -45,7 +57,9 @@
         <el-table-column prop="status" label="状态">
           <template v-slot="scope">
             <el-switch
-              :value="scope.row.status === 1 ? true : false"
+              v-model="scope.row.status"
+              :active-value="0"
+              :inactive-value="1"
               active-color="#409eff"
               inactive-color="#dcdfe6"
               @change="handleChangeTableSwitch(scope.row.status)"
@@ -54,11 +68,14 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180">
-          <template>
+          <template v-slot="scope">
             <el-button type="text" size="text" @click="handleOpenDrawer('edit')"
               >修改</el-button
             >
-            <el-popconfirm title="这是一段内容确定删除吗？">
+            <el-popconfirm
+              title="您确定删除吗？"
+              @confirm="handleDelSkus(scope.row.id)"
+            >
               <el-button type="danger" size="text" slot="reference"
                 >删除</el-button
               >
@@ -91,13 +108,15 @@
           <el-form-item label="状态">
             <el-switch
               class="swicth"
-              :value="skuForm.status === 1"
+              :active-value="0"
+              :inactive-value="1"
               active-color="#409eff"
               inactive-color="#d9dce3"
               @change="handleChangeSwitch(skuForm.status)"
             >
             </el-switch>
           </el-form-item>
+          <!-- prop="default" -->
           <el-form-item label="规格值">
             <el-tag
               :key="tag"
@@ -153,7 +172,7 @@ export default {
         name: '',
         num: 1,
         status: 1,
-        default: []
+        default: ''
       },
       drawerTitle: '新增',
       skuFormRules: {
@@ -165,11 +184,11 @@ export default {
           { min: 1, message: '请添加规格值', trigger: 'blur' }
         ]
       },
-
       skusSum: '',
       countStatus: false,
       tags: [],
-      loadingStatus: false
+      loadingStatus: false,
+      ids: []
     }
   },
   created() {
@@ -231,6 +250,64 @@ export default {
     // 表单提交验证
     handleSkusFormSubmit() {
       // this.$refs.skuFormRef.validate(valid)
+      if (this.drawerTitle === '新增') {
+        this.handleAddSkus()
+      } else if (this.drawerTitle === '修改') {
+        this.handleEditCate()
+      }
+    },
+    // 新增
+    async handleAddSkus() {
+      try {
+        await SkusApi.addSkus(this.skuForm)
+        this.loadSkusList()
+        this.handleClose()
+        this.$notify({
+          message: '新增成功',
+          type: 'success'
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    // 删除
+    async handleDelSkus(id) {
+      const ids = [id]
+      try {
+        await SkusApi.delSkus(ids)
+        this.loadSkusList()
+        this.handleClose()
+        this.$notify({
+          message: '删除成功',
+          type: 'success'
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    // 多选事件
+    handleSelectionChange(val) {
+      // val 拿到所有行的数据
+      console.log('我只能对你说', val)
+      val.forEach((item) => {
+        const id = item.id
+        this.ids.push(id)
+      })
+      console.log('我只能对你说', this.ids)
+    },
+    // 多选删除
+    async handleDelAllSkus() {
+      try {
+        await SkusApi.delCheckSkus({ ids: this.ids })
+        this.loadSkusList()
+        this.handleClose()
+        this.$notify({
+          message: '删除成功',
+          type: 'success'
+        })
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }
@@ -284,5 +361,8 @@ header {
   &:hover {
     background-color: #f5f7fa;
   }
+}
+.addbtn {
+  margin-right: 10px;
 }
 </style>

@@ -28,6 +28,14 @@ const delCate = (data) => {
   return request({ url: `/admin/category/${data.id}`, method: 'POST', data })
 }
 
+// 删除商品表格单行数据
+const delGoodsTable = (id) => {
+  return request({
+    url: `/admin/app_category_item/${id}/delete`,
+    method: 'POST'
+  })
+}
+
 // 更新分类列表状态接口
 const updateCateList = (data = {}) => {
   return request({
@@ -52,5 +60,6 @@ export default {
   getGoodsList,
   getGoodsSelectionList,
   updateCategory,
-  delCate
+  delCate,
+  delGoodsTable
 }

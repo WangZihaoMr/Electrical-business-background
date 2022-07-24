@@ -11,13 +11,32 @@ const addSkus = (data = {}) => {
 }
 
 // 删除表格规格数据
-const delSkus = () => {
-  return request({ url: '/admin/skus/delete_all', method: 'POST' })
+const delSkus = (ids = []) => {
+  return request({
+    url: '/admin/skus/delete_all',
+    method: 'POST',
+    data: { ids: ids }
+  })
+}
+
+// 多选删除规格数据
+const delCheckSkus = (data = {}) => {
+  return request({
+    url: '/admin/skus/delete_all',
+    method: 'POST',
+    data
+  })
 }
 
 // 编辑switch开关
-const editSwitch = (id = '') => {
-  return request({ url: `/admin/skus/${id}/update_status`, method: 'POST' })
+const editSwitch = (data = {}) => {
+  return request({
+    url: `/admin/skus/${data.id}/update_status`,
+    method: 'POST',
+    data: {
+      status: data.status
+    }
+  })
 }
 
 // 编辑表格规格数据
@@ -37,5 +56,6 @@ export default {
   delSkus,
   editFormSkus,
   editTableSkus,
-  editSwitch
+  editSwitch,
+  delCheckSkus
 }

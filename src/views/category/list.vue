@@ -26,8 +26,8 @@
             <el-switch
               class="swicth"
               v-model="item.status"
-              :active-value="0"
-              :inactive-value="1"
+              :active-value="1"
+              :inactive-value="0"
               active-color="#409eff"
               inactive-color="#d9dce3"
               @change="updateSwitchCate(item.id, item.status)"
@@ -38,12 +38,11 @@
               @click="handleOpenDrawer('edit', item.name, item.id)"
               >修改</el-button
             >
-            <el-popconfirm title="您确定删除吗？">
-              <el-button
-                class="del-button"
-                type="text"
-                slot="reference"
-                @click="handleDelCate(item.name, item.id)"
+            <el-popconfirm
+              title="您确定删除吗？"
+              @confirm="handleDelCate(item.name, item.id)"
+            >
+              <el-button class="del-button" type="text" slot="reference"
                 >删除</el-button
               >
             </el-popconfirm>
@@ -83,8 +82,11 @@
           </el-table-column>
           <el-table-column prop="name" label="商品名称"> </el-table-column>
           <el-table-column label="操作">
-            <template>
-              <el-popconfirm title="是否要删除该记录？">
+            <template v-slot="scope">
+              <el-popconfirm
+                title="是否要删除该记录？"
+                @confirm="handleDelGoodsTableCate(scope.row.id)"
+              >
                 <el-button type="text" slot="reference">删除</el-button>
               </el-popconfirm>
             </template>
@@ -284,6 +286,21 @@ export default {
         message: '删除成功',
         type: 'success'
       })
+    },
+    // 删除商品表格数据
+    async handleDelGoodsTableCate(id) {
+      console.log('id==>', id)
+      try {
+        await CategoryApi.delGoodsTable(id)
+        this.getCateList()
+        this.handleClose()
+        this.$notify({
+          message: '删除成功',
+          type: 'success'
+        })
+      } catch (error) {
+        console.log(error)
+      }
     },
     // 推荐商品
     handleGoods() {},

@@ -131,7 +131,7 @@ export default {
         width: 120px;
         .close {
           display: inline-block;
-          // transition: width 2s;
+          transition: all 2s;
         }
         color: #409eff;
       }
