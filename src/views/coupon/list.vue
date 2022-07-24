@@ -11,10 +11,16 @@
           content="刷新数据"
           placement="top"
         >
-          <div class="refresh"><i class="el-icon-refresh"></i></div>
+          <div class="refresh" @click="handleRefresh">
+            <i class="el-icon-refresh"></i>
+          </div>
         </el-tooltip>
       </header>
-      <el-table :data="couponList" style="width: 100%">
+      <el-table
+        v-loading="loadingStatus"
+        :data="couponList"
+        style="width: 100%"
+      >
         <el-table-column prop="scope" label="优惠券名称" width="400">
           <template v-slot="scope">
             <div class="descBox">
@@ -56,7 +62,8 @@ export default {
   components: {},
   data() {
     return {
-      couponList: []
+      couponList: [],
+      loadingStatus: false
     }
   },
   created() {
@@ -66,7 +73,13 @@ export default {
     async loadGetCouponList() {
       const res = await Coupon.getCouponList()
       this.couponList = res.list
+      this.loadingStatus = false
       console.log('优惠券', this.couponList)
+    },
+    // 刷新数据
+    handleRefresh() {
+      this.loadingStatus = !this.loadingStatus
+      this.loadGetCouponList()
     }
   }
 }

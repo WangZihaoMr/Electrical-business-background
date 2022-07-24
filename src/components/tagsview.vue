@@ -64,8 +64,12 @@ export default {
       }
     },
     // 关闭其他功能
-    handleCloseOtherTag(i) {
-      this.$store.dispatch('tagsview/closeOtherTag', i)
+    handleCloseOtherTag() {
+      const currentTag = this.tags.find(
+        (item) => item.path === this.$route.path
+      )
+      const tags = [{ path: '/index', title: '控制台' }, currentTag]
+      this.$store.dispatch('tagsview/closeOtherTag', tags)
     },
     // 关闭所有功能
     handleCloseAllTag() {

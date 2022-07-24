@@ -18,10 +18,18 @@
           content="刷新数据"
           placement="top"
         >
-          <div class="refresh"><i class="el-icon-refresh"></i></div>
+          <div class="refresh" @click="handleRefresh">
+            <i class="el-icon-refresh"></i>
+          </div>
         </el-tooltip>
       </header>
-      <el-table :data="skusList" stripe sortable style="width: 100%">
+      <el-table
+        v-loading="loadingStatus"
+        :data="skusList"
+        stripe
+        sortable
+        style="width: 100%"
+      >
         <el-table-column type="selection" width="60"></el-table-column>
         <el-table-column
           prop="name"
@@ -159,7 +167,8 @@ export default {
       },
       skusSum: '',
       countStatus: false,
-      tags: []
+      tags: [],
+      loadingStatus: false
     }
   },
   created() {
@@ -170,7 +179,13 @@ export default {
       const res = await SkusApi.getSkusList()
       this.skusList = res.list
       this.total = res.totalCount
+      this.loadingStatus = false
       console.log('1', res)
+    },
+    // 刷新数据
+    handleRefresh() {
+      this.loadingStatus = !this.loadingStatus
+      this.loadSkusList()
     },
     // 抽屉的打开
     handleOpenDrawer() {

@@ -11,7 +11,9 @@
           content="刷新数据"
           placement="top"
         >
-          <div class="refresh"><i class="el-icon-refresh"></i></div>
+          <div class="refresh" @click="handleRefresh">
+            <i class="el-icon-refresh"></i>
+          </div>
         </el-tooltip>
       </div>
       <ul class="cate-wrapper">
@@ -63,7 +65,12 @@
         </el-form>
       </div>
       <div v-else-if="drawerTitle === '推荐商品'" style="padding: 20px">
-        <el-table :data="goodsList" border style="width: 100%">
+        <el-table
+          :data="goodsList"
+          border
+          style="width: 100%"
+          v-loading="loadingStatus"
+        >
           <el-table-column prop="id" label="ID" width="60"> </el-table-column>
           <el-table-column prop="cover" label="商品封面" width="200">
             <template v-slot="scope">
@@ -168,7 +175,8 @@ export default {
       goodsList: [],
       goodsDialogVisible: false,
       goodsSelectionList: [],
-      cateDataList: []
+      cateDataList: [],
+      loadingStatus: false
     }
   },
   created() {
@@ -188,11 +196,16 @@ export default {
       this.goodsList = res
       // console.log('商品', res)
     },
+    // 刷新数据
+    handleRefresh() {
+      this.loadingStatus = !this.loadingStatus
+      console.log(this.loadingStatus)
+    },
     // 编辑状态
     async updateSwitchCate(id, status) {
       const data = {
         id,
-        status: status === 1
+        status
       }
       try {
         await CategoryApi.updateCateList(data)

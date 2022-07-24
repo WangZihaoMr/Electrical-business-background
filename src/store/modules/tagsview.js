@@ -22,10 +22,8 @@ export default {
       setItem(tags_key, state.tags)
     },
     // 关闭其他tag
-    closeOtherTag(state, i) {
-      // 与之前关闭其他功能不一样，之后是当期那tag的下标，现在是直接关闭其他
-      // state.tags.splice(i + 1)
-      // state.tags.splice(1, i - 1)
+    closeOtherTag(state, tags) {
+      state.tags = tags
       setItem(tags_key, state.tags)
     },
     // 关闭所有tag
@@ -45,8 +43,8 @@ export default {
       commit('delTag', i)
     },
     // 关闭其他tag
-    closeOtherTag({ commit }, i) {
-      commit('closeOtherTag', i)
+    closeOtherTag({ commit }, tags) {
+      commit('closeOtherTag', tags)
     },
     // 关闭所有tag
     closeAllTag({ commit }) {
