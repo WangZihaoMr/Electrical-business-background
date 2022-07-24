@@ -165,6 +165,7 @@ export default {
           { min: 1, message: '请添加规格值', trigger: 'blur' }
         ]
       },
+
       skusSum: '',
       countStatus: false,
       tags: [],

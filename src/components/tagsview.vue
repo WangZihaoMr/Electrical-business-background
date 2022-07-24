@@ -7,12 +7,13 @@
         :key="index"
         @click="handleTopath(index, item.path)"
       >
-        {{ item.title
-        }}<span
-          v-if="index !== 0"
-          class="close"
-          @click="handleDelTag(index, item.path)"
-          ><i class="el-icon-close"></i
+        <span
+          >{{ item.title
+          }}<span
+            v-if="index !== 0"
+            class="close"
+            @click="handleDelTag(index, item.path)"
+            ><i class="el-icon-close"></i></span
         ></span>
       </li>
     </ul>
@@ -115,8 +116,8 @@ export default {
     align-items: center;
     li {
       height: 32px;
+      width: 100px;
       line-height: 32px;
-      padding: 0 20px;
       font-size: 14px;
       margin: 0 5px;
       background-color: #ffffff;
@@ -124,16 +125,22 @@ export default {
       cursor: pointer;
       display: flex;
       align-items: center;
+      justify-content: space-around;
+      transition: width 1s;
       &:hover {
+        width: 120px;
+        .close {
+          display: inline-block;
+          // transition: width 2s;
+        }
         color: #409eff;
-        transition: all 0.5s;
       }
       .close {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: none;
         width: 16px;
         height: 16px;
+        text-align: center;
+        line-height: 16px;
         margin-left: 4px;
         border-radius: 50%;
         i {
